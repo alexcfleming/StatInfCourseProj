@@ -1,0 +1,28 @@
+---
+title: "Pt2_BasicInfDataAnalysis"
+author: "Alex Fleming"
+date: "1/29/2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for 
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
