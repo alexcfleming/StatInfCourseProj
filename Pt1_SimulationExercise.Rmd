@@ -2,27 +2,77 @@
 title: "Pt1_SimulationExercise"
 author: "Alex Fleming"
 date: "1/29/2018"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
-```{r setup, include=FALSE}
+## Exploration of the Exponential Distribution in R - Final Course Project
+#### by Alex C. Fleming, student in the JHU Data Science Specialization
+
+## Overview
+This document will walk through the analysis of an exponential distribution, and the sample means from it, and serve as a re-inforcement of the central limit theorem. We will compare statistics of the theoretical data and the sample data after 1000 simulations of draws from 40 exponential distributions (in a dataset called "mns"). There will be no variation in the lambda of the exponential simulations.
+
+The exponential distirbution is a function of x and lambda where
+$$ f(x) = \lambda e^{-\lambda x} \hspace{.3in}
+x \ge 0 $$
+
+The mean of this distribution is 1/lambda and the variance is 1/lambda^2
+
+## Simulations
+
+```{r data, include=TRUE}
 knitr::opts_chunk$set(echo = TRUE)
+# Basic setup including lambda, data, and the means
+lambda <- .2
+# Exponential data distribution for comparison
+data <- rexp(1000, lambda)
+# Create Means simulation
+mns <- NULL
+for (i in 1 : 1000){
+     mns <- c(mns, mean(rexp(40, lambda)))
+}
+```
+The graphs below illustrate the raw distribution vs. the means of repeated distributions
+
+```{r graphs}
+hist(data, main="Exponential Distribution", xlab="1000 draws")
+hist(mns, main="Means of Exponential Distributions", xlab="1000 repeats of Mean of 40 Exp Dist")
 ```
 
-## R Markdown
+## Sample Mean vs Theoretical Mean
+The differences between the sample and theory are small, which does not surprise us with only 1000 simulations. They seem to be close enough to satisfy basic curiousity.
 
-This is an R Markdown document.
-
-```{r cars}
-summary(cars)
+```{r means}
+tmu <- 1/lambda
+smu <- mean(mns)
+diff <- smu-tmu
+paste("The difference between the means is", diff, ", the theoretical mean is", tmu, ", and the sample mean is", smu,".")
 ```
+This is to be expected since the sample is coming from an exponential distirbution.
 
-## Including Plots
+## Sample Variance vs. Theoretical Variance
 
-You can also
+The variance of the theory of the exponential distribution
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r variance}
+tvar <- 1/(lambda^2)
+svar <- var(mns)
+diffv <- tvar-svar
+paste("The difference between the variances is", diffv, ", the theoretical variance of an exponential distribution is", tvar, ", and the drawn sample variance is", svar)
 ```
+This is also not a surprising result since the central limit theorem tells us that as you have more and more independent samples from any distribution, the resulting sample is normal, not exponential.
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Distribution
+
+We would expect the distributon of the means to look more and more normal as the number of iterations increases, which we can see when we look at the plot of a normal distribution histogram with 1000 draws with mean=5 (1/lambda). The variance of this distribution is not exactly our mns sample, but it is close.
+
+```{r distribution}
+hist(rnorm(1000, mean=5), main="Normal Distribution Draw")
+nvar <- var(rnorm(1000, mean=5))
+paste("Our sample variance from the mns dataset is", svar, "versus the variance of 1000 normal draws of", nvar)
+```
+We would expect this sample variance to approach as the number of iterations increases, but this shows that our sample is beginning to approximate a normal distribution. This reinforces what we would expect from the central limit theorem.
+
+Contact: alex.c.fleming@gmail.com
+
